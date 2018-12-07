@@ -21,9 +21,17 @@
         map = new google.maps.Map(document.getElementById('map'), {
            ///map options
            center: {lat: 42.882004, lng: 74.582748},
-           zoom: 8
+           zoom: 10
            ///
         });
+
+        // listen for click on map
+        google.maps.event.addListener(map, 'click', 
+        function(event) {
+            //add marker
+            addMarker({coords:event.latLng});  
+        });
+        /*
         // add marker
         let marker = new google.maps.Marker({
             position:{lat:42.7999968, lng:74.8833298},
@@ -31,7 +39,6 @@
             
         })
 
-        
 
         let infoWindow = new google.maps.InfoWindow({
             content: '<h1>Mountains side</h1>'
@@ -39,7 +46,55 @@
 
         marker.addListener('click', function() {
             infoWindow.open(map, marker);
-        })
+        })*/
+        
+        let markers = [
+            {
+            coords:{lat: 42.9820, lng: 74.5827},
+            iconImage: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content: '<h2>Bishkek</h2>'
+            },
+            {
+            coords:{lat: 43.3820, lng: 74.8827},
+            content: '<h2>Kant</h2>'
+            },
+            {
+            coords: {lat:42.3333, lng: 44.4444}
+            }
+        ];
+
+
+            //loop through markers
+        for(let i=0; i<markers.length; i++) {
+            addMarker(markers[i]);
+        }
+
+       function addMarker(props) {
+           let marker = new google.maps.Marker({
+               position: props.coords,
+               map: map
+            //    icon: props.iconImage
+           });
+
+           //check for customicon
+           if(props.iconImage) {
+               // set icon image
+               marker.setIcon(props.iconImage);
+           }
+
+           // check content
+           if(props.content) {
+               let infoWindow = new google.maps.infoWindow({
+                   content: props.content
+               });
+
+            marker.addListener('click', function() {
+                infoWindow.open(map, marker);
+            });
+           }
+       } 
+
+
       }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9CHAxCZsf3HFEH2EOJgQQG54y40dYLjA&callback=initMap"
